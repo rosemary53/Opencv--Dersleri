@@ -1,0 +1,47 @@
+# Her resim birçok pixelden meydana gelir
+# Her pixelin kendine ait konumu ve renk kanalı vardır
+# Renk kanalları opencv de BGR formatındadır.
+# 0->B ,1->G ,2->R indisi ile bu renklere erişilir.
+# Renksiz resimlerde yani siyah beyaz resimlerde tek bir kanal vardır !!
+
+import cv2
+
+resim = cv2.imread("pixel.jpeg")
+
+# Herhangi bir pixele erişmek
+
+px1 = resim[100,100]
+print(px1)
+
+# Pixelin renk kanallarına erişmek ve renk koduna ulaşmak
+
+px1_blue = px1[0]     #resim[100,100,0]
+px1_green = px1[1]    #resim[100,100,1]
+px1_red = px1[2]      #resim[100,100,2]
+
+print(f"B : {px1_blue} G: {px1_green} R: {px1_red}")
+
+# Renk kanallarının değerini değiştirmek
+
+px1[0] = 53
+px1[1] = 71
+px1[2] = 124
+
+print(px1)
+
+# Hepsini aynı anda değiştirmek
+
+px1 = [200,130,100]   #resim[100,100] = [200,130,100]
+
+print(px1)
+
+# Resim boyutu,size,dtype ını al
+resim_boyut = resim.shape
+print(f"Resim boyut :{resim_boyut}")
+
+resim_size = resim.size
+print(f"Resim size :{resim_size}")    # 1600x1280x3 (width x height x kanal_Sayısı)
+
+resim_dtype = resim.dtype             # pixelin değerini ifade eder yani renk kanalının veri tipini yani hangi sayı aralıgında olacagını belirler
+print(f"Resim dtyep = {resim_dtype}") # unit8 : unsignet int 8 yani 0 ile 2^8 den 0-255 değerlerini alabilir
+
