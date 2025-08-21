@@ -1,0 +1,47 @@
+# Fare Hareketleri Örnek Çözüm
+
+import cv2
+import numpy as np
+
+# Global değişkenler
+resim = np.ones((512,512,3),np.uint8) # boş bir tuval oluşturdum
+resim[:] = [255,255,255]              # rengini beyaz olarak ayarladım
+xi,yi = -1,-1
+xb,yb = -1,-1
+basili_mi = False
+gecici_resim = resim.copy()
+
+def fare_hareketleri(event,x,y,flags,param):
+    global xi,yi,xb,yb,basili_mi,gecici_resim    
+    if event == cv2.EVENT_LBUTTONDOWN:
+        # sol tuşa tıklandığı an başlangıç koordinatı olarak kaydet
+        xi = x
+        yi = y
+        basili_mi = True
+        
+    elif event == cv2.EVENT_LBUTTONUP:
+        basili_mi = False
+        xb = x
+        yb = y
+        font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+        cv2.putText(resim,str(xi) +"," + str(yi),(xi,yi),font,1,(100,50,50),2)
+        cv2.rectangle(resim,(xi,yi),(xb,yb),(200,200,0),2)
+        print(f"Bitis kösesi {xb},{yb}")
+        
+    elif event == cv2.EVENT_MOUSEMOVE and basili_mi:
+        gecici_resim = resim.copy()
+        cv2.rectangle(gecici_resim,(xi,yi),(x,y),(100,50,30),2)
+        cv2.imshow("fare hareketleri", gecici_resim)    # dikdörtgenin büyürken küçülürken resmini görmek için
+        
+
+cv2.namedWindow("fare hareketleri")
+
+cv2.setMouseCallback("fare hareketleri", fare_hareketleri)
+
+while 1:
+    cv2.imshow("fare hareketleri", resim)
+    
+    if cv2.waitKey(1) == ord("q"):
+        break
+cv2.destroyAllWindows()
+
