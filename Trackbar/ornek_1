@@ -1,0 +1,23 @@
+import cv2
+import numpy as np
+
+def nothing(x):
+    pass
+
+resim = np.zeros((512,512,3),np.uint8)
+
+cv2.namedWindow("Parlaklik Ayarları")
+
+cv2.createTrackbar("Parlaklik","Parlaklik Ayarları",0,255,nothing)
+
+while 1: 
+    
+    cv2.imshow("Parlaklik Ayarları", resim)
+ 
+    if cv2.waitKey(1) == ord("q"):
+        break
+    
+    parlaklik = cv2.getTrackbarPos("Parlaklik", "Parlaklik Ayarları") 
+    resim[:] = [parlaklik,parlaklik,parlaklik]
+
+cv2.destroyAllWindows()
