@@ -1,0 +1,36 @@
+import cv2
+import numpy as np
+
+def nothing(x):
+    pass
+
+def fare_hareketleri(event,x,y,flags,param):
+    
+    if event == cv2.EVENT_LBUTTONDBLCLK:
+        # Burada öncelikle resimin pixeline erişip konumunu alırız
+        # Ardından pixelin renk kanalına erişiriz .Opencv de BGR şeklindedir 0-B,1-G,R-2 
+        b_konum = resim[y,x][0]
+        g_konum = resim[y,x][1]
+        r_konum = resim[y,x][2]
+        cv2.setTrackbarPos("R", "Renk Secici",r_konum)
+        cv2.setTrackbarPos("G", "Renk Secici",g_konum)
+        cv2.setTrackbarPos("B", "Renk Secici",b_konum)
+
+
+# Rastgele renkten oluşan bir boş resim oluştur
+resim = np.random.randint(0,255,(512,512,3),np.uint8)
+
+cv2.namedWindow("Renk Secici")
+
+cv2.createTrackbar("R", "Renk Secici",0,255,nothing)
+cv2.createTrackbar("G", "Renk Secici",0,255,nothing)
+cv2.createTrackbar("B", "Renk Secici",0,255,nothing)
+
+cv2.setMouseCallback("Renk Secici", fare_hareketleri)
+
+while 1:
+    cv2.imshow("Renk Secici", resim)
+    
+    if cv2.waitKey(1) == ord("q"):
+        break
+cv2.destroyAllWindows()
