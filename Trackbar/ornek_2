@@ -1,0 +1,38 @@
+import cv2
+import numpy as np
+
+basili_mi = False
+def nothing(x):  
+    pass
+
+def fare_hareketleri(event,x,y,flags,param):
+    global basili_mi
+    
+    if event == cv2.EVENT_LBUTTONDOWN :
+        basili_mi = True
+    elif event == cv2.EVENT_LBUTTONUP:
+        basili_mi = False
+    
+    elif event == cv2.EVENT_MOUSEMOVE and basili_mi:   
+        R = cv2.getTrackbarPos("R", "Cizim Araci")
+        G = cv2.getTrackbarPos("G", "Cizim Araci")
+        B = cv2.getTrackbarPos("B", "Cizim Araci")
+        cv2.circle(resim,(x,y), 10, (B,G,R),-1)
+
+resim = np.ones((512,512,3),np.uint8)*255
+
+cv2.namedWindow("Cizim Araci")
+
+cv2.createTrackbar("R","Cizim Araci", 0,255, nothing)
+cv2.createTrackbar("G","Cizim Araci", 0,255, nothing)
+cv2.createTrackbar("B","Cizim Araci",0,255, nothing)
+
+cv2.setMouseCallback("Cizim Araci", fare_hareketleri)
+
+while 1:
+    cv2.imshow("Cizim Araci", resim)
+    
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
+    
+cv2.destroyAllWindows()        
