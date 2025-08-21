@@ -1,0 +1,48 @@
+# Klavye olayları
+
+
+# # İçinde event geçen metodlar
+
+# for olay in dir(cv2):
+#     if 'EVENT' in olay:
+#         print(olay)
+        
+import cv2
+import numpy as np
+
+basildiMi = False
+
+def fare_hareketleri(event,x,y,flags,param):
+    global basildiMi 
+ 
+    if event == cv2.EVENT_LBUTTONDOWN:
+        basildiMi = True
+        
+    elif event == cv2.EVENT_LBUTTONUP:
+        basildiMi = False
+        
+    elif event == cv2.EVENT_MOUSEMOVE and basildiMi: # Fare hareket ediyorsa ve sol tuşa basılı ise
+        if flags & cv2.EVENT_FLAG_CTRLKEY:           # Burada mantıksal bir işlem gerçekleşip ve işlemine tabi tutuluyor
+           cv2.circle(resim,(x,y), 3,(255,0,0),-1)   # ctrl tuşuna basıldığında BGR dan renk mavi
+        else:
+           cv2.circle(resim,(x,y),2,(0,0,255),-1)     # BGR dan renk kırmızı
+
+    
+
+# Boş bir resim oluşturalım
+resim = np.ones((512,512,3),np.uint8)
+# Resimin rengini beyaz yaptım
+resim[:] =[255,255,255]
+
+# Hazır bir pencere oluşturalım
+cv2.namedWindow("fare hareketleri")
+
+# Fare olaylarında geri çağırma fonksiyonu oluşturalım ,Ardınan pencere ve fonksiyon ekleyelim
+cv2.setMouseCallback("fare hareketleri", fare_hareketleri)
+
+while 1:
+    cv2.imshow("fare hareketleri", resim)
+    
+    if cv2.waitKey(1) == ord("q"):
+        break
+cv2.destroyAllWindows()
