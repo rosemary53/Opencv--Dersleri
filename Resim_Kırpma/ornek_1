@@ -1,0 +1,36 @@
+import cv2
+import matplotlib.pyplot as plt
+
+# Resim kırparken xa dan xb ye ya dan yb ye olacak şekilde aralık belirlemelisin : resim[100:300,300:560]
+# Kırpılan alanı bir yerde tutmalısın 
+# Matplotlib de renk kanalları RGB sıralı iken OPENCV de BGR şeklindedir unutma
+# Resimi kırparken önce y eksenindeki değişimi dikkate alacaksın ardından x eksenindeki değişimi => [y1:y2,x1:x2]
+
+
+resim = cv2.imread("pixel.jpeg")
+
+# Sınırları belli bölgeyi kırpma
+kirpilan_resim = resim[1100:1400,300:600]  # ? [x1:x2,y1:y2] şeklinde mi yoksa [y1:y2,x1:x2] şeklinde mi
+
+#  Kırpılan resmi orjinal resmin herhangi bir yerine yerleştirme
+#  Kırpılan resim 300x300 pixele sahiptir
+resim[100:400,900:1200] = kirpilan_resim
+
+# Resmin tüm kırmızı veya yeşil kanallarını ortadan kaldırmak yani sıfır yapmak
+resim[:,:,0] = 0 # Matplotlib de RGB sırada
+
+# Split ile resmi renk kanallarına ayırma : her bir renge ait dizi döndürür
+red,green,blue = cv2.split(resim)
+print(f"Red : {red},green : {green} and blue :{blue}")
+
+#Kafama takılan yer ? plt.subplot(121) ne demek?
+# Burada ekranı kaç satıra ve kaç sütuna böleceğini ister ardından 1.yere şu elemanı 2.yere de şu elemanı yerleştir der
+# Yani => subplot(satır sayısı,sutun sayısı,nereye yerleştir)
+
+         
+plt.subplot(211)   #2 satır ,1 sutun var 1.eleman
+plt.imshow(resim)
+plt.subplot(212)  #2 satır , 1 sutun var 2.eleman yani 2 satırda çünkü 1.satırda 1 tane eleman olabilir sutun 1 oldugundan
+plt.imshow(kirpilan_resim)
+plt.show()
+
