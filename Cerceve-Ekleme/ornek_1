@@ -1,0 +1,46 @@
+import cv2
+from matplotlib import pyplot as plt
+import numpy as np
+
+resim = cv2.imread("pixel.jpeg")
+
+BLUE = [255,0,0] # Burada BGR şeklindedir
+
+# Burdaki boyutlar ne anlama geliyor ?
+# Resmin üst,alt,sağ ve sol kısmı vardır.
+# Biz aslında çerçeve yaparken resmin bu kısımlarına ekleme yaparız
+# 30 pixel top ,aslında resmin üst kısmına 30 pixel ekleme yap anlamına gelir.
+# Aynı şekilde sağına soluna altına da 30 pixel ekleme yap deriz.
+# Kenarlık ekleme resmin pixelini artırır
+
+c_replicate = cv2.copyMakeBorder(resim, 30,30,30,30,cv2.BORDER_REPLICATE)
+c_reflect = cv2.copyMakeBorder(resim,30,30,30,30, cv2.BORDER_REFLECT)
+c_reflect_101 = cv2.copyMakeBorder(resim,30,30,30,30,cv2.BORDER_REFLECT_101)
+c_wrap = cv2.copyMakeBorder(resim, 30,30,30,30,cv2.BORDER_WRAP)
+c_constant = cv2.copyMakeBorder(resim,30,30,30,30,cv2.BORDER_CONSTANT,value=BLUE)
+
+plt.subplot(231)
+plt.imshow(resim,'gray')
+plt.title("ORIGINAL")
+
+plt.subplot(232)
+plt.imshow(c_replicate,'gray')
+plt.title("REPLICATE")
+
+plt.subplot(233)
+plt.imshow(c_reflect,'gray')
+plt.title("REFLECT")
+
+plt.subplot(234)
+plt.imshow(c_reflect_101,'gray')
+plt.title("REFLECT 101")
+
+plt.subplot(235)
+plt.imshow(c_wrap)
+plt.title("WRAP")
+
+plt.subplot(236)
+plt.imshow(cv2.cvtColor(c_constant, cv2.COLOR_BGR2RGB)) # resmi doğru renkte gösterir
+plt.title("CONSTANT")
+
+plt.show() # Oluşan tüm grafikler tek bir ekranda gözükmesini sağlar.
