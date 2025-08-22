@@ -1,0 +1,54 @@
+import cv2
+import numpy as np
+
+# Bitsel işlemler ile bir resmin diğer resim üzerinde opak bir şekilde nasıl durur bunu yapacağız
+
+# Öncelikle resimleri okuyalım : resimlerin ve kod dosyasının aynı klasörde olduğuna dikkat edelim
+resim1 = cv2.imread("kiz_kulesi.png")
+resim2 = cv2.imread("kucuk_logo.png")
+
+#Bu işlem önceden yapılmıştır.
+# kucuk_resim2 =cv2.resize(resim2,(300,300))
+# cv2.imwrite("kucuk_logo.png", kucuk_resim2)
+
+# Küçük resmin boyutlarını alıp buyuk resimden yer ayıracağız
+x,y,kanalSayisi = resim2.shape
+print(x,y,kanalSayisi)   # 300,300,3
+
+
+# Kırpılan resmin boyutları ile kucuk resmin boyutları aynı olmalı
+# Kirpilan resim oluşturulurken daha sonra bu kirpilan resim değişmemesi için resim1 den kopyasını aldım .
+# Eğer direkt kirpilan_resim = resim1[0:x,0:y] yaparsam referans vermiş olup resim1 deki değişim kirpilan_resmi de etkiler
+kirpilan_resim = resim1[0:x,0:y].copy()
+x2,y2,kanalSayisi2 = kirpilan_resim.shape
+print(x2,y2,kanalSayisi2) # 300 ,300,3 
+
+#MASKELEME İŞLEMİ : LOGONUN ARKA PLANINI KENDİSİNDEN AYIRMAK 
+
+# Öncelikle küçük resmi griye çeviriyoruze
+resim2_gri = cv2.cvtColor(resim2, cv2.COLOR_BGR2GRAY)
+
+# 10 pikselden buyuk yerler beyaz olsun geri kalanı siyah olsun burada treshleme yapıyoruz
+ret,mask = cv2.threshold(resim2_gri, 200, 255,cv2.THRESH_BINARY)
+# mask resmini tersledim 1 ler 0 oldu sıfırlar 1 oldu yani beyaz yerler siyah siyah yerler beyaz oldu
+ters_mask = cv2.bitwise_not(mask)
+# Kırpılmış resim ile mask  ı ve işlemine tabi tutcam
+resim2_bg = cv2.bitwise_and(kirpilan_resim, kirpilan_resim,mask=mask)
+# Şimdi logodaki renkli yerleri elde etcem
+resim1_bg = cv2.bitwise_and(resim2, resim2,mask=ters_mask)
+# resimleri toplayacam
+toplam = cv2.add(resim1_bg, resim2_bg)
+# ayrılan yere aktar
+resim1[0:x,0:y] = toplam
+
+cv2.imshow("adim 1", kirpilan_resim)
+cv2.imshow("adim 2", resim2)
+cv2.imshow("adim 3", resim2_gri)
+cv2.imshow("adim 4", mask)
+cv2.imshow("adim 5", ters_mask)
+cv2.imshow("adim 6", resim2_bg)
+cv2.imshow("adim 7", resim1_bg)
+cv2.imshow("adim 8", resim1)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
